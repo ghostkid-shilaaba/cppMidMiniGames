@@ -77,10 +77,12 @@ void replay(char* t, char &c) {
         for (int i{ 0 }; i < 9;i++) {
             t[i] = ' ';
         };
-        reset(t,c);
+        reset(t, c);
         play(t);
     }
-    else (exit(1));
+    else {
+        return;
+    };
 }
 void play(char* t) {
     static int x = 0;
