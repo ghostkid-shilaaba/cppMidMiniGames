@@ -4,7 +4,7 @@ using namespace std;
 void how2Play() {
     cout << "how to play\n"
         "1- each player gets his turn\n"
-        "2-press r to restart and q to quit\n"
+        "2-when a round is over press y to restart and n to quit\n"
         "3-input the number where you want to make you're play as shown below\n"
         " 1 | 2 | 3 \n"
         "---+---+---\n"
@@ -14,7 +14,7 @@ void how2Play() {
         "\n\n\n"
         ;
 }
-string  colors(char a) {
+string colors(char a) {
     if (a == 'X') {
         return  "\033[31mX\033[0m";
     }
@@ -55,12 +55,34 @@ bool checkDraw(char* t) {
     }
     return true;
 }
-void reset(char* t) {
+void score(char* t,char &c) {
+    static int p1 = 0, p2 = 0;
+    if (checkWin(t)){
+    (c == 'X') ? p2++ : p1++;
+    }
+    cout << "player 1 (0) " << p1 << " - " << p2 << " player 2 (X)\n\n";
+}
+void reset(char* t,char &c) {
     cout << "\033[2J\033[H";
     how2Play();
+    score(t, c);
     grid(t);
 }
-void modifyElements(char* t) {
+void play(char* t);
+void replay(char* t, char &c) {
+    char check;
+    cout << "want to replay (y/n)\n";
+    cin >> check;
+    if (check == 'y') {
+        for (int i{ 0 }; i < 9;i++) {
+            t[i] = ' ';
+        };
+        reset(t,c);
+        play(t);
+    }
+    else (exit(1));
+}
+void play(char* t) {
     static int x = 0;
     char c;
     (x % 2 == 0) ? c = 'O' : c = 'X';
@@ -71,21 +93,20 @@ void modifyElements(char* t) {
         t[nbElement-1] = c;
         x++;
     }
-    reset(t);
-    if (checkWin(t)){ cout <<c<<" won game over\n";}
-    else if (checkDraw(t)) { cout << "draw\n"; }
+    reset(t,c);
+    if (checkWin(t)) { cout << c << " won game over\n"; replay(t,c); }
+    else if (checkDraw(t)) { cout << "draw\n"; replay(t,c);}
     else{
-        modifyElements(t);
+        play(t);
     };
 }
+
 int main()
 {
     char tab[9] = { ' ', ' ', ' ',
                     ' ',' ',' ',
                     ' ',' ',' ' };
 
-    how2Play();
-    grid(tab);
-    modifyElements(tab);
+    reset(tab, tab[0]);
+    play(tab);
 }
-
