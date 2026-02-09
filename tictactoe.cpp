@@ -89,7 +89,7 @@ void play(char* t) {
 
 int main()
 {
-    char replay = {'y'};
+    char replay{'y'};
     while (replay == 'y') {
         char tab[9] = { ' ', ' ', ' ',
                         ' ',' ',' ',
