@@ -68,22 +68,6 @@ void reset(char* t,char &c) {
     score(t, c);
     grid(t);
 }
-void play(char* t);
-void replay(char* t, char &c) {
-    char check;
-    cout << "want to replay (y/n)\n";
-    cin >> check;
-    if (check == 'y') {
-        for (int i{ 0 }; i < 9;i++) {
-            t[i] = ' ';
-        };
-        reset(t, c);
-        play(t);
-    }
-    else {
-        return;
-    };
-}
 void play(char* t) {
     static int x = 0;
     char c;
@@ -96,8 +80,8 @@ void play(char* t) {
         x++;
     }
     reset(t,c);
-    if (checkWin(t)) { cout << c << " won game over\n"; replay(t,c); }
-    else if (checkDraw(t)) { cout << "draw\n"; replay(t,c);}
+    if (checkWin(t)) { cout << c << " won game over\n"; }
+    else if (checkDraw(t)) { cout << "draw\n";}
     else{
         play(t);
     };
@@ -105,10 +89,15 @@ void play(char* t) {
 
 int main()
 {
-    char tab[9] = { ' ', ' ', ' ',
-                    ' ',' ',' ',
-                    ' ',' ',' ' };
+    char replay = {'y'};
+    while (replay == 'y') {
+        char tab[9] = { ' ', ' ', ' ',
+                        ' ',' ',' ',
+                        ' ',' ',' ' };
 
-    reset(tab, tab[0]);
-    play(tab);
+        reset(tab, tab[0]);
+        play(tab);
+        cout << "wanna replay? (y/n)\n";
+        cin >> replay;
+    }
 }
