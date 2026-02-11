@@ -99,5 +99,6 @@ int main()
         play(tab);
         cout << "wanna replay? (y/n)\n";
         cin >> replay;
+        replay = tolower(replay);
     }
 }
