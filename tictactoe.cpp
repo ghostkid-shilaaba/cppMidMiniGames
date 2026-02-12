@@ -62,7 +62,7 @@ void score(char* t,char &c) {
     }
     cout << "player 1 (0) " << p1 << " - " << p2 << " player 2 (X)\n\n";
 }
-void reset(char* t,char &c) {
+void render(char* t,char &c) {
     cout << "\033[2J\033[H";
     how2Play();
     score(t, c);
@@ -71,20 +71,23 @@ void reset(char* t,char &c) {
 void play(char* t) {
     static int x = 0;
     char c;
-    (x % 2 == 0) ? c = 'O' : c = 'X';
-    int nbElement;
-    cout << "its " << c << "'s turn \n";
-    cin >> nbElement;
-    if (t[nbElement-1] == ' ') {
-        t[nbElement-1] = c;
-        x++;
+    while (!checkWin(t) && !checkDraw(t)) {
+        (x % 2 == 0) ? c = 'O' : c = 'X';
+        int nbElement;
+        cout << "its " << c << "'s turn \n";
+        while (!(cin >> nbElement) || nbElement > 9 || nbElement < 1) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "enter a valid input (1-9)\n";
+        }
+        if (t[nbElement - 1] == ' ') {
+            t[nbElement - 1] = c;
+            x++;
+        }
+        render(t, c);
+        if (checkWin(t)) { cout << c << " won game over\n"; }
+        else if (checkDraw(t)) { cout << "draw\n"; }
     }
-    reset(t,c);
-    if (checkWin(t)) { cout << c << " won game over\n"; }
-    else if (checkDraw(t)) { cout << "draw\n";}
-    else{
-        play(t);
-    };
 }
 
 int main()
@@ -95,10 +98,14 @@ int main()
                         ' ',' ',' ',
                         ' ',' ',' ' };
 
-        reset(tab, tab[0]);
+        render(tab, tab[0]);
         play(tab);
         cout << "wanna replay? (y/n)\n";
-        cin >> replay;
+        while (!(cin >> replay)) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "enter a valid input";
+        }
         replay = tolower(replay);
     }
 }
